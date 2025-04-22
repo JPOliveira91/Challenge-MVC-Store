@@ -1,8 +1,7 @@
 trigger:
 - release02
 
-pool:
-  vmImage: 'windows-latest'
+pool: My PC
 
 variables:
   buildConfiguration: 'Release'

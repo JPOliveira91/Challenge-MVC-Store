@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Challenge-MVC-Store", "Challenge-MVC-Store.csproj", "{0606864F-B77D-4397-88EA-5D3E02928CD8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Challenge-MVC-Store", ".\Challenge-MVC-Store\Challenge-MVC-Store.csproj", "{0606864F-B77D-4397-88EA-5D3E02928CD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Challenge-MVC-Store.Tests", "..\Challenge-MVC-Store.Tests\Challenge-MVC-Store.Tests.csproj", "{10B2A127-2250-4BC6-9C27-1DE28C0F4F56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Challenge-MVC-Store.Tests", ".\Challenge-MVC-Store.Tests\Challenge-MVC-Store.Tests.csproj", "{10B2A127-2250-4BC6-9C27-1DE28C0F4F56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Challenge-MVC-Store.API", "..\Challenge-MVC-Store.API\Challenge-MVC-Store.API.csproj", "{D2974942-C804-4AF9-BA44-A1C59AC5C622}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Challenge-MVC-Store.API", ".\Challenge-MVC-Store.API\Challenge-MVC-Store.API.csproj", "{D2974942-C804-4AF9-BA44-A1C59AC5C622}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
