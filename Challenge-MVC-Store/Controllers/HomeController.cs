@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using Challenge_MVC_Store.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Challenge_MVC_Store.Controllers
 {

@@ -16,26 +16,5 @@ namespace Challenge_MVC_Store.Data.Repositories.Orders
                 .ThenInclude(pp => pp.Product)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
-
-        public async Task IncludeProductToOrderAsync(int orderId, int produtoId, int quantity)
-        {
-            Product? product = await _context.Products.FindAsync(produtoId);
-            if (product == null) throw new ArgumentException("Produto não encontrado");
-
-            Order? order = await _context.Orders.FindAsync(orderId);
-            if (order == null) throw new ArgumentException("Pedido não encontrado");
-
-            OrderProduct orderProduct = new()
-            {
-                OrderId = orderId,
-                ProductId = produtoId,
-                Quantity = quantity,
-                UnitPrice = product.Price
-            };
-
-            _context.OrderProducts.Add(orderProduct);
-
-            await _context.SaveChangesAsync();
-        }
     }
 }

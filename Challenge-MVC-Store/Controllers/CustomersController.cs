@@ -1,7 +1,7 @@
 ﻿using Challenge_MVC_Store.Data.Models;
 using Challenge_MVC_Store.Data.Repositories.Customers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Diagnostics;
 using System.Net.Mail;
 
@@ -27,6 +27,8 @@ namespace Challenge_MVC_Store.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Customer customer)
         {
+            ValidateModel(customer);
+
             if (ModelState.IsValid)
             {
                 try
@@ -47,7 +49,7 @@ namespace Challenge_MVC_Store.Controllers
                 }
             }
 
-            TempData["ErrorMessage"] = "Dados inválidos. Verifique os campos.";
+            TempData["ErrorMessage"] = GetFirstErrorMessage();
             return View(customer);
         }
 
@@ -56,5 +58,52 @@ namespace Challenge_MVC_Store.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #region util
+
+        private void ValidateModel(Customer customer)
+        {
+            if (string.IsNullOrWhiteSpace(customer.Name))
+            {
+                ModelState.AddModelError("Name", "O nome é obrigatório.");
+            }
+
+            if (string.IsNullOrWhiteSpace(customer.Email))
+            {
+                ModelState.AddModelError("Email", "O email é obrigatório.");
+            }
+            else if (!IsValidEmail(customer.Email))
+            {
+                ModelState.AddModelError("Email", "Por favor, insira um email válido.");
+            }
+        }
+
+        private static bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                // This will throw FormatException if email is invalid
+                var mailAddress = new MailAddress(email);
+
+                return mailAddress.Address == email;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
+
+        public string GetFirstErrorMessage()
+        {
+            return ModelState.Values
+                .SelectMany(v => v.Errors)
+                .FirstOrDefault()?
+                .ErrorMessage ?? "An unknown error occurred";
+        }
+
+        #endregion util
     }
 }

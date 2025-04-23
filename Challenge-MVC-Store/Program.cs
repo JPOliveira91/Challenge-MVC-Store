@@ -1,7 +1,6 @@
 using Challenge_MVC_Store.Data;
 using Challenge_MVC_Store.Data.Repositories;
 using Challenge_MVC_Store.Data.Repositories.Customers;
-using Challenge_MVC_Store.Services.DataService;
 using Challenge_MVC_Store.Services.LogService;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,24 +16,23 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
 
 builder.Services.AddSingleton<ILogService, LogService>();
-builder.Services.AddScoped<IDataService, DataService>();
 
 #endregion Custom
 
 WebApplication app = builder.Build();
 
 // Seed data
-using (var scope = app.Services.CreateScope())
+using (IServiceScope scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
+    IServiceProvider services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<ApplicationDbContext>();
+        ApplicationDbContext context = services.GetRequiredService<ApplicationDbContext>();
         SeedData.Initialize(context);
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
+        ILogger<Program> logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred while seeding the database.");
     }
 }

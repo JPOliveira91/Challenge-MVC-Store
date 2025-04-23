@@ -1,5 +1,5 @@
-using Challenge_MVC_Store.Data.Repositories;
 using Challenge_MVC_Store.Data;
+using Challenge_MVC_Store.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;

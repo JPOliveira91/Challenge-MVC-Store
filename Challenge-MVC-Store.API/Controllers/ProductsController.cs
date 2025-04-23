@@ -2,7 +2,6 @@
 using Challenge_MVC_Store.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 
 namespace Challenge_MVC_Store.Controllers
@@ -32,7 +31,7 @@ namespace Challenge_MVC_Store.Controllers
         [SwaggerResponse(400, "Parâmetros inválidos")]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery] int? id = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            (int totalCount, int totalPages, List<ProductDto> result) = await GetPagedProductsList(id, page, pageSize);
+            (int totalCount, int totalPages, List<Product> result) = await GetPagedProductsList(id, page, pageSize);
 
             string response = JsonSerializer.Serialize(new
             {
@@ -47,7 +46,7 @@ namespace Challenge_MVC_Store.Controllers
             return Ok(result);
         }
 
-        private async Task<(int totalCount, int totalPages, List<ProductDto> result)> GetPagedProductsList(int? id, int page, int pageSize)
+        private async Task<(int totalCount, int totalPages, List<Product> result)> GetPagedProductsList(int? id, int page, int pageSize)
         {
             IEnumerable<Product> products = await _productRepository.GetAllAsync();
 
@@ -59,30 +58,13 @@ namespace Challenge_MVC_Store.Controllers
             int totalCount = products.Count();
             int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            List<ProductDto> result = products
+            List<Product> result = products
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .OrderBy(product => product.Name)
-                .ToList()
-                .ConvertAll(product => new ProductDto()
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Price = product.Price
-                });
+                .ToList();
 
             return (totalCount, totalPages, result);
         }
-    }
-
-    public class ProductDto
-    {
-        public int Id { get; set; }
-        public required string Name { get; set; }
-
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Price { get; set; }
-
-        public ICollection<Order> Orders { get; set; } = [];
     }
 }

@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Challenge_MVC_Store.Data.Models;
+﻿using Challenge_MVC_Store.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Challenge_MVC_Store.Data
 {
