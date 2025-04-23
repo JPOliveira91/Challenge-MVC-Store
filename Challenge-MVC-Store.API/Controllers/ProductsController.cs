@@ -1,20 +1,22 @@
-﻿using Challenge_MVC_Store.Data.Models;
-using Challenge_MVC_Store.Data.Repositories;
+﻿using Challenge_MVC_Store.API.UseCase;
+using Challenge_MVC_Store.Data.Models;
+using Challenge_MVC_Store.Data.Repositories.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json;
 
-namespace Challenge_MVC_Store.Controllers
+namespace Challenge_MVC_Store.API.Controllers
 {
     [Route("api/products")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IRepository<Product> _productRepository;
+        private readonly IProductsUseCase _productsUseCase;
 
-        public ProductsController(IRepository<Product> ProductRepository)
+        public ProductsController(IProductsUseCase productsUseCase)
         {
-            _productRepository = ProductRepository;
+            _productsUseCase = productsUseCase;
         }
 
         // GET: api/Products
@@ -29,42 +31,47 @@ namespace Challenge_MVC_Store.Controllers
         [SwaggerOperation(Summary = "Obtém uma lista paginada de produtos")]
         [SwaggerResponse(200, "Lista de produtos retornada com sucesso", typeof(IEnumerable<Product>))]
         [SwaggerResponse(400, "Parâmetros inválidos")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery] int? id = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts([FromQuery] int? id = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            (int totalCount, int totalPages, List<Product> result) = await GetPagedProductsList(id, page, pageSize);
-
-            string response = JsonSerializer.Serialize(new
+            if (page < 1)
             {
-                TotalCount = totalCount,
-                PageSize = pageSize,
-                CurrentPage = page,
-                TotalPages = totalPages
-            });
-
-            Response.Headers.Append("X-Pagination", response);
-
-            return Ok(result);
-        }
-
-        private async Task<(int totalCount, int totalPages, List<Product> result)> GetPagedProductsList(int? id, int page, int pageSize)
-        {
-            IEnumerable<Product> products = await _productRepository.GetAllAsync();
-
-            if (id != null)
-            {
-                products = products.Where(p => p.Id == id);
+                return BadRequest("Número da página necessita ser maior que 0.");
             }
 
-            int totalCount = products.Count();
-            int totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            if (pageSize < 1)
+            {
+                return BadRequest("Tamanho da página necessita ser maior que 0.");
+            }
 
-            List<Product> result = products
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .OrderBy(product => product.Name)
-                .ToList();
+            try
+            {
+                (int totalCount, int totalPages, List<ProductDto> result) = await _productsUseCase.GetPagedProductsList(id, page, pageSize);
 
-            return (totalCount, totalPages, result);
+                // Additional validation for the returned data
+                if (page > 1 && page > totalPages)
+                {
+                    return BadRequest($"Página {page} requisitada execede o total de {totalPages} páginas.");
+                }
+
+                var paginationMetadata = new
+                {
+                    TotalCount = totalCount,
+                    PageSize = pageSize,
+                    CurrentPage = page,
+                    TotalPages = totalPages,
+                    HasPrevious = page > 1,
+                    HasNext = page < totalPages
+                };
+
+                Response.Headers.Append("X-Pagination",
+                    JsonSerializer.Serialize(paginationMetadata));
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing your request");
+            }
         }
     }
 }

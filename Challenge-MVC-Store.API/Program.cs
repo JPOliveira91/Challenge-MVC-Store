@@ -1,5 +1,6 @@
+using Challenge_MVC_Store.API.UseCase;
 using Challenge_MVC_Store.Data;
-using Challenge_MVC_Store.Data.Repositories;
+using Challenge_MVC_Store.Data.Repositories.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -34,7 +35,8 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IProductRepository), typeof(ProductRepository));
+builder.Services.AddScoped(typeof(IProductsUseCase), typeof(ProductsUseCase));
 
 WebApplication app = builder.Build();
 

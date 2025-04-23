@@ -1,7 +1,6 @@
 ﻿using Challenge_MVC_Store.Data.Models;
 using Challenge_MVC_Store.Data.Repositories.Customers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Diagnostics;
 using System.Net.Mail;
 
@@ -86,7 +85,7 @@ namespace Challenge_MVC_Store.Controllers
             try
             {
                 // This will throw FormatException if email is invalid
-                var mailAddress = new MailAddress(email);
+                MailAddress mailAddress = new(email);
 
                 return mailAddress.Address == email;
             }

@@ -9,7 +9,7 @@ namespace Challenge_MVC_Store.Tests
         {
             // Arrange
             LogService logService = new();
-            string message = "Test message";
+            string message = "Mensagem teste";
             string expectedOutput = $"Log - {DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
 
             using StringWriter stringWriter = new();

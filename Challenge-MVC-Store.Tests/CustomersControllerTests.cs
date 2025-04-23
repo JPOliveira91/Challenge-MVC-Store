@@ -37,7 +37,7 @@ namespace Challenge_MVC_Store.Tests
         public async Task Create_Post_RedirectsToCreate_WhenModelStateIsValid()
         {
             // Arrange
-            Customer customer = new Customer
+            Customer customer = new()
             {
                 Name = "Neymar Júnior",
                 Email = "njunior@teste.com"
@@ -62,7 +62,7 @@ namespace Challenge_MVC_Store.Tests
         public async Task Create_Post_ReturnsViewResult_WhenModelStateIsInvalid(string? name, string? email, string errorMessage)
         {
             // Arrange
-            Customer customer = new Customer
+            Customer customer = new()
             {
                 Name = name,
                 Email = email
@@ -81,7 +81,7 @@ namespace Challenge_MVC_Store.Tests
         public async Task Create_Post_ReturnsViewResult_WhenExceptionIsThrown()
         {
             // Arrange
-            Customer customer = new Customer
+            Customer customer = new()
             {
                 Name = "Drew Brees",
                 Email = "dbrees@teste.com"

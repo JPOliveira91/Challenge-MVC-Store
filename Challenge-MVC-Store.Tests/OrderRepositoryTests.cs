@@ -23,7 +23,7 @@ namespace Challenge_MVC_Store.Tests
             await using ApplicationDbContext context = new(_dbContextOptions);
             OrderRepository repository = new(context);
 
-            Product product = new() { Id = 1, Name = "Product A", Price = 10.00m };
+            Product product = new() { Id = 1, Name = "Produto A", Price = 10.00m };
             Order order = new()
             {
                 Id = 1,
@@ -46,7 +46,7 @@ namespace Challenge_MVC_Store.Tests
             Assert.NotNull(result);
             Assert.Equal(1, result.Id);
             Assert.Single(result.OrderProducts);
-            Assert.Equal("Product A", result.OrderProducts.First().Product.Name);
+            Assert.Equal("Produto A", result.OrderProducts.First().Product.Name);
         }
 
         [Fact]

@@ -12,4 +12,12 @@ namespace Challenge_MVC_Store.Data.Models
 
         public ICollection<OrderProduct> OrderProducts { get; set; } = [];
     }
+
+    public class ProductDto
+    {
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public decimal Price { get; set; }
+        public ICollection<OrderDto> Orders { get; set; } = [];
+    }
 }
